@@ -40,11 +40,25 @@ const Messages: FC<{
   }, [userId, currentConversation]);
   if (isLoading) return <CircularProgress />;
   return (
-    <div style={{ width: "100%" }}>
+    <div
+      style={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        gap: "10px",
+      }}
+    >
       {messages.map((item) => (
         <div
           key={item.id}
-          style={{ textAlign: item.sender.id === userId ? "left" : "right" }}
+          style={{
+            textAlign: item.sender.id === userId ? "left" : "right",
+            border: "1px solid #ccc",
+            borderRadius: "16px",
+            padding: "0px 10px",
+            minWidth: "300px",
+            alignSelf: item.sender.id === userId ? "flex-start" : "flex-end",
+          }}
         >
           <h4>{item.text}</h4>
         </div>
