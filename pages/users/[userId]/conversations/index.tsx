@@ -1,11 +1,10 @@
 import React, { FC, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
-import Avatar from "@mui/material/Avatar";
 import CircularProgress from "@mui/material/Button";
-import Button from "@mui/material/Button";
 
 import Conversation from "pages/components/Conversation";
+import Message from "pages/components/Message";
 
 type User = {
   id: string;
@@ -26,6 +25,7 @@ type Conversation = {
 const Conversations = () => {
   const router = useRouter();
   const { userId } = router.query;
+  const [currentConversation, setCurrentConversation] = useState<string>("");
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
@@ -69,22 +69,26 @@ const Conversations = () => {
               name={item.participants[1].name}
               lastMessage={item.lastMessage?.text}
               time={item.lastMessage?.ts}
+              id={item.id}
+              setCurrentConversation={setCurrentConversation}
             />
           </div>
         ))}
       </div>
 
-      <div
-        style={{
-          border: "1px solid #ccc",
-          borderRadius: "16px",
-          display: "flex",
-          flexGrow: 1,
-          padding: "20px",
-        }}
-      >
-        hello
-      </div>
+      {currentConversation !== "" && (
+        <div
+          style={{
+            border: "1px solid #ccc",
+            borderRadius: "16px",
+            display: "flex",
+            flexGrow: 1,
+            padding: "20px",
+          }}
+        >
+          <Message currentConversation={currentConversation} />
+        </div>
+      )}
     </div>
   );
 };
