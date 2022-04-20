@@ -67,14 +67,22 @@ const Conversations = () => {
           <div key={item.id}>
             <Conversation
               name={item.participants[1].name}
-              lastMessage={item.lastMessage.text}
-              time={item.lastMessage.ts}
+              lastMessage={item.lastMessage?.text}
+              time={item.lastMessage?.ts}
             />
           </div>
         ))}
       </div>
 
-      <div style={{ border: "1px solid #ccc", borderRadius: "16px", display: "flex", flexGrow: 1, padding: "20px" }}>
+      <div
+        style={{
+          border: "1px solid #ccc",
+          borderRadius: "16px",
+          display: "flex",
+          flexGrow: 1,
+          padding: "20px",
+        }}
+      >
         hello
       </div>
     </div>
