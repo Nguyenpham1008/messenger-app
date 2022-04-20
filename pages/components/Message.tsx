@@ -40,7 +40,7 @@ const Messages: FC<{
   }, [userId, currentConversation]);
   if (isLoading) return <CircularProgress />;
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       {messages.map((item) => (
         <div
           key={item.id}
