@@ -9,7 +9,15 @@ const Conversation: FC<{
   time: number;
   id: string;
   setCurrentConversation: any;
-}> = ({ name, lastMessage, time, id, setCurrentConversation }) => {
+  currentConversation: string;
+}> = ({
+  name,
+  lastMessage,
+  time,
+  id,
+  setCurrentConversation,
+  currentConversation,
+}) => {
   return (
     <Button
       variant="outlined"
@@ -18,6 +26,7 @@ const Conversation: FC<{
         borderRadius: "10px",
         textTransform: "none",
         color: "black",
+        background: id === currentConversation ? "cornsilk" : null,
       }}
       onClick={() => setCurrentConversation(id)}
     >

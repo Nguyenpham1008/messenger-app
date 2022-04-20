@@ -101,6 +101,7 @@ const Conversations = () => {
               time={item.lastMessage?.ts}
               id={item.id}
               setCurrentConversation={setCurrentConversation}
+              currentConversation={currentConversation}
             />
           </div>
         ))}
