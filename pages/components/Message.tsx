@@ -42,7 +42,10 @@ const Messages: FC<{
   return (
     <div>
       {messages.map((item) => (
-        <div key={item.id}>
+        <div
+          key={item.id}
+          style={{ textAlign: item.sender.id === userId ? "left" : "right" }}
+        >
           <h4>{item.text}</h4>
         </div>
       ))}
