@@ -96,7 +96,9 @@ const Conversations = () => {
         {conversations.map((item) => (
           <div key={item.id}>
             <Conversation
-              name={item.participants[1].name}
+              name={
+                item.participants.filter((item) => item.id !== userId)[0].name
+              }
               lastMessage={item.lastMessage?.text}
               time={item.lastMessage?.ts}
               id={item.id}
