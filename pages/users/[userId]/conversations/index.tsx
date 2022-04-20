@@ -2,6 +2,10 @@ import React, { FC, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import CircularProgress from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import IconButton from "@mui/material/IconButton";
+import InputBase from "@mui/material/InputBase";
+import SendIcon from "@mui/icons-material/Send";
 
 import Conversation from "pages/components/Conversation";
 import Message from "pages/components/Message";
@@ -21,6 +25,32 @@ type Conversation = {
     ts: number;
   };
 };
+const Chatbox = () => (
+  <Paper
+    sx={{
+      p: "2px 4px",
+      display: "flex",
+      alignItems: "center",
+      borderRadius: "9999px",
+    }}
+  >
+    <InputBase
+      sx={{ ml: 1, flex: 1 }}
+      placeholder="Type your message"
+      //onChange={(event) => setAirBnbURL(event.target.value)}
+      fullWidth
+    />
+
+    <IconButton
+      className="smm:hidden bg-lookaround-more_light_grey"
+      aria-label="search"
+      size="small"
+      //onClick={handleSubmit}
+    >
+      <SendIcon />
+    </IconButton>
+  </Paper>
+);
 
 const Conversations = () => {
   const router = useRouter();
@@ -84,9 +114,12 @@ const Conversations = () => {
             display: "flex",
             flexGrow: 1,
             padding: "20px",
+            flexDirection: "column",
+            justifyContent: "space-between",
           }}
         >
           <Message currentConversation={currentConversation} />
+          <Chatbox />
         </div>
       )}
     </div>
