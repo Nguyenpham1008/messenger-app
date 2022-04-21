@@ -23,7 +23,7 @@ const Conversation: FC<{
       variant="outlined"
       sx={{
         marginTop: "10px",
-        borderRadius: "10px",
+        borderRadius: "5px",
         textTransform: "none",
         color: "black",
         background: id === currentConversation ? "cornsilk" : null,

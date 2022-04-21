@@ -9,6 +9,9 @@ import SendIcon from "@mui/icons-material/Send";
 
 import Conversation from "pages/components/Conversation";
 import Message from "pages/components/Message";
+import { ConversationContainer } from "containers/Conversations";
+import { SearchConversation } from "pages/components/SearchConversation";
+import { Box } from "@mui/system";
 
 type User = {
   id: string;
@@ -26,30 +29,33 @@ type Conversation = {
   };
 };
 const Chatbox = () => (
-  <Paper
-    sx={{
-      p: "2px 4px",
-      display: "flex",
-      alignItems: "center",
-      borderRadius: "9999px",
-    }}
-  >
-    <InputBase
-      sx={{ ml: 1, flex: 1 }}
-      placeholder="Type your message"
-      //onChange={(event) => setAirBnbURL(event.target.value)}
-      fullWidth
-    />
-
-    <IconButton
-      className="smm:hidden bg-lookaround-more_light_grey"
-      aria-label="search"
-      size="small"
-      //onClick={handleSubmit}
+  <div style={{ padding: 20, position: "absolute", bottom: 5, width: "100%" }}>
+    <Paper
+      sx={{
+        p: "2px 4px",
+        display: "flex",
+        alignItems: "center",
+        borderRadius: "9999px",
+      }}
     >
-      <SendIcon />
-    </IconButton>
-  </Paper>
+      <InputBase
+        sx={{ ml: 1, flex: 1 }}
+        autoFocus
+        placeholder="Type your message"
+        //onChange={(event) => setAirBnbURL(event.target.value)}
+        fullWidth
+      />
+
+      <IconButton
+        className="smm:hidden bg-lookaround-more_light_grey"
+        aria-label="search"
+        size="small"
+        //onClick={handleSubmit}
+      >
+        <SendIcon />
+      </IconButton>
+    </Paper>
+  </div>
 );
 
 const Conversations = () => {
@@ -73,59 +79,37 @@ const Conversations = () => {
   }, [userId]);
   if (isLoading) return <CircularProgress />;
   return (
-    <div
-      style={{
-        display: "flex",
-        margin: "20px",
-        gap: "20px",
-        minHeight: "500px",
-        flexWrap: "wrap",
-        maxWidth: "1368px",
-      }}
+    <ConversationContainer
+      search={<SearchConversation />}
+      convervations={conversations.map((item) => (
+        <div key={item.id}>
+          <Conversation
+            name={
+              item.participants.filter((item) => item.id !== userId)[0].name
+            }
+            lastMessage={item.lastMessage?.text}
+            time={item.lastMessage?.ts}
+            id={item.id}
+            setCurrentConversation={setCurrentConversation}
+            currentConversation={currentConversation}
+          />
+        </div>
+      ))}
     >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          padding: "20px",
-          border: "1px solid #ccc",
-          borderRadius: "16px",
-          width: "fit-content",
-        }}
-      >
-        {conversations.map((item) => (
-          <div key={item.id}>
-            <Conversation
-              name={
-                item.participants.filter((item) => item.id !== userId)[0].name
-              }
-              lastMessage={item.lastMessage?.text}
-              time={item.lastMessage?.ts}
-              id={item.id}
-              setCurrentConversation={setCurrentConversation}
-              currentConversation={currentConversation}
-            />
-          </div>
-        ))}
-      </div>
-
-      {currentConversation !== "" && (
-        <div
-          style={{
-            border: "1px solid #ccc",
-            borderRadius: "16px",
-            display: "flex",
-            flexGrow: 1,
-            padding: "20px",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
+      {currentConversation !== "" ? (
+        <div style={{ position: "relative", width: "100%", height: "100%" }}>
+          <Box sx={{ p: 1, background: "#eee" }}>
+            <h3>
+              Conversation between You and {conversations.find(item => item.id == currentConversation)?.participants.filter((item) => item.id != userId)[0]?.name}.
+            </h3>
+          </Box>
           <Message currentConversation={currentConversation} />
           <Chatbox />
         </div>
+      ) : (
+        <></>
       )}
-    </div>
+    </ConversationContainer>
   );
 };
 

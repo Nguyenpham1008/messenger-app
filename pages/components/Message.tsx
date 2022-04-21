@@ -22,6 +22,7 @@ const Messages: FC<{
   currentConversation: string;
 }> = ({ currentConversation }) => {
   const router = useRouter();
+  console.log(currentConversation)
   const { userId } = router.query;
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -39,6 +40,7 @@ const Messages: FC<{
       });
   }, [userId, currentConversation]);
   if (isLoading) return <CircularProgress />;
+  console.log(messages,'mess')
   return (
     <div
       style={{
@@ -46,6 +48,7 @@ const Messages: FC<{
         display: "flex",
         flexDirection: "column",
         gap: "10px",
+        padding:20
       }}
     >
       {messages.map((item) => (
