@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import CircularProgress from "@mui/material/Button";
 
-import Conversation from "pages/components/Conversation";
 import Message from "pages/components/Message";
 
 type User = {
@@ -40,15 +39,16 @@ const Messages: FC<{
       });
   }, [userId, currentConversation]);
   if (isLoading) return <CircularProgress />;
-  console.log(messages,'mess')
   return (
     <div
       style={{
         width: "100%",
         display: "flex",
+        maxHeight:"80vh",
         flexDirection: "column",
         gap: "10px",
-        padding:20
+        padding:20,
+        overflowY:'scroll'
       }}
     >
       {messages.map((item) => (

@@ -12,6 +12,7 @@ import Message from "pages/components/Message";
 import { ConversationContainer } from "containers/Conversations";
 import { SearchConversation } from "pages/components/SearchConversation";
 import { Box } from "@mui/system";
+import { Close } from "@mui/icons-material";
 
 type User = {
   id: string;
@@ -98,10 +99,13 @@ const Conversations = () => {
     >
       {currentConversation !== "" ? (
         <div style={{ position: "relative", width: "100%", height: "100%" }}>
-          <Box sx={{ p: 1, background: "#eee" }}>
+          <Box sx={{ p: 1, background: "#eee",display:'flex',justifyContent:'space-between',alignItems:'center' }}>
             <h3>
               Conversation between You and {conversations.find(item => item.id == currentConversation)?.participants.filter((item) => item.id != userId)[0]?.name}.
             </h3>
+            <IconButton onClick={()=>setCurrentConversation("")} color="error">
+              <Close/>
+            </IconButton>
           </Box>
           <Message currentConversation={currentConversation} />
           <Chatbox />
