@@ -31,12 +31,7 @@ async function getConversations(req: NextApiRequest, res: NextApiResponse) {
 
     const pageSize = Number.parseInt(req.query.pageSize as string, 10) || 10;
 
-    const result = await repository.getConversations(
-      accountId,
-      pageSize,
-      sort,
-      cursor
-    );
+    const result = await repository.getConversations(accountId, pageSize, sort, cursor);
 
     return res.status(200).json(result);
   } catch (error) {

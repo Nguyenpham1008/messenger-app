@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import Account from "./components/Account";
+import Account from "../components/Account";
 
 const Home: NextPage = () => {
   const [accounts, setAccounts] = useState<{ id: number; name: string }[]>([]);

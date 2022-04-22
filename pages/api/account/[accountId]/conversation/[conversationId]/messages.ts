@@ -36,8 +36,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   async function createMessage() {
     await repository.init();
-
-    try {
+    try { 
       const { conversationId } = req.query;
       const { text } = req.body;
       const sentById = req.query.accountId as string;
