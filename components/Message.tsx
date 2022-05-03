@@ -22,9 +22,22 @@ export type Message = {
 const MessageComponent: FC<{
   currentConversation: string;
   messagesData: Message[];
-}> = ({ currentConversation, messagesData }) => {
+  loadmore: any;
+  loading: boolean;
+}> = ({ currentConversation, messagesData, loadmore, loading }) => {
   const router = useRouter();
   const messagesEndRef = useRef<null | HTMLElement>(null);
+
+  const listInnerRef: any = useRef();
+
+  const onScroll = () => {
+    if (listInnerRef.current) {
+      const { scrollTop } = listInnerRef.current;
+      if (scrollTop === 0) {
+        loadmore();
+      }
+    }
+  };
 
   const { userId } = router.query;
   const [messages, setMessages] = useState<Message[]>(messagesData);
@@ -36,9 +49,13 @@ const MessageComponent: FC<{
   const scrollToBottom = () => {
     messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
   };
-  useEffect(scrollToBottom, [messages]);
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
   return (
     <div
+      onScroll={onScroll}
+      ref={listInnerRef}
       style={{
         width: "100%",
         display: "flex",
@@ -50,7 +67,8 @@ const MessageComponent: FC<{
         marginBottom: 10,
       }}
     >
-      {messages.map((item) => (
+      {loading && <div style={{ textAlign: "center" }}> Loading... </div>}
+      {messages.map((item, index) => (
         <div
           key={item.id}
           style={{
@@ -65,7 +83,7 @@ const MessageComponent: FC<{
           <h4>{item.text}</h4>
         </div>
       ))}
-      <div ref={messagesEndRef as  React.RefObject<HTMLDivElement>}></div>
+      <div ref={messagesEndRef as React.RefObject<HTMLDivElement>}></div>
     </div>
   );
 };

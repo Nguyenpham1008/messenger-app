@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import CircularProgress from "@mui/material/Button";
@@ -14,10 +14,10 @@ import { Box } from "@mui/system";
 import { Close } from "@mui/icons-material";
 import { sortBy } from "lodash";
 
-import {
-  useForm,
-} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import MessageComponent, { Message } from "components/Message";
+
+import useFetchMessages from "components/hooks/useFetchMessages";
 
 type User = {
   id: string;
@@ -82,7 +82,13 @@ const Conversations = () => {
   const [currentConversation, setCurrentConversation] = useState<string>("");
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [messages, setMessages] = useState<Message[]>([]);
+
+  const { messages, hasMore, loading, setMessages, setTrigger } =
+    useFetchMessages(currentConversation);
+
+  const loadmore = () => {
+    hasMore && setTrigger((preValue) => !preValue);
+  };
 
   const { register, getValues, setValue } = useForm({
     defaultValues: {
@@ -102,27 +108,13 @@ const Conversations = () => {
         console.log("fail api");
       });
   }, [userId]);
-  useEffect(() => {
-    if (currentConversation != "") {
-      axios({
-        method: "GET",
-        url: `/api/account/${userId}/conversation/${currentConversation}/messages?pageSize=1000`,
-      })
-        .then((res) => {
-          setMessages(res.data.rows);
-          setIsLoading(false);
-        })
-        .catch(() => {
-          console.log("fail api");
-        });
-    }
-  }, [currentConversation]);
+
   if (isLoading) return <CircularProgress />;
 
-  const handleSendMessage = async (e:  React.KeyboardEvent<HTMLElement> ) => {
+  const handleSendMessage = async (e: React.KeyboardEvent<HTMLElement>) => {
     const { message } = getValues();
     if (e.key != "Enter") {
-      return
+      return;
     }
 
     if (message.trim() == "") {
@@ -130,7 +122,6 @@ const Conversations = () => {
       return;
     }
 
-    
     let resSendMessage = await axios.post(
       `/api/account/${userId}/conversation/${currentConversation}/messages`,
       {
@@ -138,7 +129,7 @@ const Conversations = () => {
       }
     );
     if (resSendMessage.status == 201) {
-      let newResponseMessage = resSendMessage.data.data;
+      let newResponseMessage = resSendMessage.data;
       let newMessage: Message = {
         id: newResponseMessage.id,
         text: newResponseMessage.text,
@@ -154,14 +145,19 @@ const Conversations = () => {
         (item) => item.id == currentConversation
       )[0];
       let lastMessage = {
-        id : newResponseMessage.id,
-        ts : newResponseMessage.createdAt,
-        createdAt : newResponseMessage.createdAt,
-        text : newResponseMessage.text,
-        sender : newResponseMessage.sender,
-      }
-      findCurrentConversation.lastMessage= lastMessage
-      setConversations([findCurrentConversation,...conversations.filter(item => item.id != findCurrentConversation.id)]);
+        id: newResponseMessage.id,
+        ts: newResponseMessage.createdAt,
+        createdAt: newResponseMessage.createdAt,
+        text: newResponseMessage.text,
+        sender: newResponseMessage.sender,
+      };
+      findCurrentConversation.lastMessage = lastMessage;
+      setConversations([
+        findCurrentConversation,
+        ...conversations.filter(
+          (item) => item.id != findCurrentConversation.id
+        ),
+      ]);
       setValue("message", "");
     }
   };
@@ -213,6 +209,8 @@ const Conversations = () => {
           <MessageComponent
             currentConversation={currentConversation}
             messagesData={messages}
+            loadmore={loadmore}
+            loading={loading}
           />
           <Chatbox
             register={register}
