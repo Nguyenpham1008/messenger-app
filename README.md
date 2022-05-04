@@ -1,4 +1,6 @@
-# messenger-app
+# Messenger App
+## Principles and Design Patterns of React Programming - batch01 - group7
+
 ## Getting started
 
 ```
